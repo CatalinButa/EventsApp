@@ -57,7 +57,8 @@ namespace EventsApp.Api.Controllers
         [Route("update-user/{userId}")]
         public IActionResult UpdateUserById(UserDto finalUserDto, int userId)
         {
-            UserDto updatedUserDto = userService.UpdateUserById(finalUserDto, userId);
+            int loggedInUserId = GetLoggedInUserId();
+            UserDto updatedUserDto = userService.UpdateUserById(finalUserDto, userId, loggedInUserId);
             return Ok(updatedUserDto);
         }
 

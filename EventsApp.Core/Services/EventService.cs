@@ -42,8 +42,13 @@ namespace EventsApp.Core.Services
             return savedEventDto;
         }
 
-        public EventDto UpdateEventById(EventDto finalEventDto, int eventId)
+        public EventDto UpdateEventById(EventDto finalEventDto, int eventId, int loggedInUserId)
         {
+            Event eventToUpdate = eventRepository.GetEventById(eventId);
+            if (eventToUpdate.Owner.UserId != loggedInUserId)
+            {
+                throw new Exception("You can't update the details of another user's event");
+            }
             Event finalEvent = ConvertToEvent(finalEventDto);
             Event updatedEvent = eventRepository.UpdateEventById(finalEvent, eventId);
             EventDto updatedEventDto = ConvertToEventDto(updatedEvent);

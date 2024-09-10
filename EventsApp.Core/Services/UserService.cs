@@ -69,8 +69,12 @@ namespace EventsApp.Core.Services
             return token;
         }
 
-        public UserDto UpdateUserById(UserDto finalUserDto, int userId)
+        public UserDto UpdateUserById(UserDto finalUserDto, int userId, int loggedInUserId)
         {
+            if (userId != loggedInUserId)
+            {
+                throw new Exception("You can't update the details of another user");
+            }
             User finalUser = ConvertToUser(finalUserDto);
             User updatedUser = userRepository.UpdateUserById(finalUser, userId);
             UserDto updatedUserDto = ConvertToUserDto(updatedUser);

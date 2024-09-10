@@ -47,7 +47,7 @@ namespace EventsApp.Api.Controllers
         public IActionResult UpdateEventById(EventDto finalEventDto, int eventId)
         {
             int loggedInUserId = GetLoggedInUserId();
-            EventDto updatedEventDto = eventService.UpdateEventById(finalEventDto, eventId);
+            EventDto updatedEventDto = eventService.UpdateEventById(finalEventDto, eventId, loggedInUserId);
             return Ok(updatedEventDto);
         }
 
