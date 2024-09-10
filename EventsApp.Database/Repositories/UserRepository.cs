@@ -47,7 +47,6 @@ namespace EventsApp.Database.Repositories
             User userToUpdate = GetUserById(userId);
             userToUpdate.Name = finalUser.Name;
             userToUpdate.Email = finalUser.Email;
-            userToUpdate.Password = finalUser.Password;
             userToUpdate.Phone = finalUser.Phone;
             userToUpdate.Role = finalUser.Role;
             userToUpdate.UpdatedDate = DateTime.Now;

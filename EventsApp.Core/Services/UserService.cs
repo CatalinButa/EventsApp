@@ -61,7 +61,6 @@ namespace EventsApp.Core.Services
             userDto.UserId = user.UserId;
             userDto.Name = user.Name;
             userDto.Email = user.Email;
-            userDto.Password = user.Password;
             userDto.Phone = user.Phone;
             userDto.Role = user.Role;
             userDto.CreatedDate = user.CreatedDate;
@@ -76,7 +75,6 @@ namespace EventsApp.Core.Services
             user.UserId = userDto.UserId;
             user.Name = userDto.Name;
             user.Email = userDto.Email;
-            user.Password = userDto.Password;
             user.Phone = userDto.Phone;
             user.Role = userDto.Role;
             user.CreatedDate = userDto.CreatedDate;
