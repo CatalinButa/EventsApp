@@ -34,6 +34,19 @@ namespace EventsApp.Database.Repositories
             return user;
         }
 
+        public User GetUserByEmail(string email)
+        {
+            User user = context.Users
+            .Where(u => u.DeletedDate == null)
+            .Where(u => u.Email == email)
+            .FirstOrDefault();
+            if (user == null)
+            {
+                throw new Exception("User not found");
+            }
+            return user;
+        }
+
         public User SaveUser(User newUser)
         {
             newUser.CreatedDate = DateTime.Now;

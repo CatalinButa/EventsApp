@@ -1,12 +1,16 @@
 ﻿using EventsApp.Core.Services;
 using EventsApp.Database.Dtos.Common;
+using EventsApp.Database.Dtos.Request;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SoundSphere.Api.Controllers;
 
 namespace EventsApp.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    [Authorize]
+    public class UserController : BaseController
     {
         public UserService userService { get; set; }
 
@@ -32,11 +36,21 @@ namespace EventsApp.Api.Controllers
         }
 
         [HttpPost]
-        [Route("save-user")]
-        public IActionResult SaveUser(UserDto newUserDto)
+        [Route("register-user")]
+        [AllowAnonymous]
+        public IActionResult RegisterUser(RegisterRequest registerRequest)
         {
-            UserDto savedUserDto = userService.SaveUser(newUserDto);
-            return Ok(savedUserDto);
+            UserDto registeredUserDto = userService.RegisterUser(registerRequest);
+            return Ok(registeredUserDto);
+        }
+
+        [HttpPost]
+        [Route("login-user")]
+        [AllowAnonymous]
+        public IActionResult LoginUser(LoginRequest loginRequest)
+        {
+            string token = userService.LoginUser(loginRequest);
+            return Ok(new { token });
         }
 
         [HttpPut]
@@ -49,6 +63,7 @@ namespace EventsApp.Api.Controllers
 
         [HttpDelete]
         [Route("delete-user/{userId}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteUserById(int userId)
         {
             UserDto deletedUserDto = userService.DeleteUserById(userId);

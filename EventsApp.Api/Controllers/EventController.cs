@@ -1,12 +1,15 @@
 ﻿using EventsApp.Core.Services;
 using EventsApp.Database.Dtos.Common;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SoundSphere.Api.Controllers;
 
 namespace EventsApp.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EventController : ControllerBase
+    [Authorize]
+    public class EventController : BaseController
     {
         public EventService eventService { get; set; }
 
@@ -43,12 +46,14 @@ namespace EventsApp.Api.Controllers
         [Route("update-event/{eventId}")]
         public IActionResult UpdateEventById(EventDto finalEventDto, int eventId)
         {
+            int loggedInUserId = GetLoggedInUserId();
             EventDto updatedEventDto = eventService.UpdateEventById(finalEventDto, eventId);
             return Ok(updatedEventDto);
         }
 
         [HttpDelete]
         [Route("delete-event/{eventId}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteEventById(int eventId)
         {
             EventDto deletedEventDto = eventService.DeleteEventById(eventId);

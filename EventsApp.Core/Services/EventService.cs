@@ -57,7 +57,7 @@ namespace EventsApp.Core.Services
             return deletedEventDto;
         }
 
-        public EventDto ConvertToEventDto(Event _event)
+        private EventDto ConvertToEventDto(Event _event)
         {
             EventDto eventDto = new EventDto();
             eventDto.EventId = _event.EventId;
@@ -80,7 +80,7 @@ namespace EventsApp.Core.Services
             return eventDto;
         }
 
-        public Event ConvertToEvent(EventDto eventDto)
+        private Event ConvertToEvent(EventDto eventDto)
         {
             Event _event = new Event();
             _event.EventId = eventDto.EventId;
