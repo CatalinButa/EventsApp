@@ -1,4 +1,5 @@
-﻿using EventsApp.Database.Entities;
+﻿using EventsApp.Database.Dtos.Common;
+using EventsApp.Database.Entities;
 using EventsApp.Database.Repositories;
 
 namespace EventsApp.Core.Services
@@ -12,34 +13,76 @@ namespace EventsApp.Core.Services
             this.userRepository = userRepository;
         }
 
-        public List<User> GetUsers()
+        public List<UserDto> GetUsers()
         {
             List<User> users = userRepository.GetUsers();
-            return users;
+            List<UserDto> userDtos = new List<UserDto>();
+            foreach (User user in users)
+            {
+                UserDto userDto = ConvertToUserDto(user);
+                userDtos.Add(userDto);
+            }
+            return userDtos;
         }
 
-        public User GetUserById(int userId)
+        public UserDto GetUserById(int userId)
         {
             User user = userRepository.GetUserById(userId);
-            return user;
+            UserDto userDto = ConvertToUserDto(user);
+            return userDto;
         }
 
-        public User SaveUser(User newUser)
+        public UserDto SaveUser(UserDto newUserDto)
         {
+            User newUser = ConvertToUser(newUserDto);
             User savedUser = userRepository.SaveUser(newUser);
-            return savedUser;
+            UserDto savedUserDto = ConvertToUserDto(savedUser);
+            return savedUserDto;
         }
 
-        public User UpdateUserById(User finalUser, int userId)
+        public UserDto UpdateUserById(UserDto finalUserDto, int userId)
         {
+            User finalUser = ConvertToUser(finalUserDto);
             User updatedUser = userRepository.UpdateUserById(finalUser, userId);
-            return updatedUser;
+            UserDto updatedUserDto = ConvertToUserDto(updatedUser);
+            return updatedUserDto;
         }
 
-        public User DeleteUserById(int userId)
+        public UserDto DeleteUserById(int userId)
         {
             User deletedUser = userRepository.DeleteUserById(userId);
-            return deletedUser;
+            UserDto deletedUserDto = ConvertToUserDto(deletedUser);
+            return deletedUserDto;
+        }
+
+        public UserDto ConvertToUserDto(User user)
+        {
+            UserDto userDto = new UserDto();
+            userDto.UserId = user.UserId;
+            userDto.Name = user.Name;
+            userDto.Email = user.Email;
+            userDto.Password = user.Password;
+            userDto.Phone = user.Phone;
+            userDto.Role = user.Role;
+            userDto.CreatedDate = user.CreatedDate;
+            userDto.UpdatedDate = user.UpdatedDate;
+            userDto.DeletedDate = user.DeletedDate;
+            return userDto;
+        }
+
+        public User ConvertToUser(UserDto userDto)
+        {
+            User user = new User();
+            user.UserId = userDto.UserId;
+            user.Name = userDto.Name;
+            user.Email = userDto.Email;
+            user.Password = userDto.Password;
+            user.Phone = userDto.Phone;
+            user.Role = userDto.Role;
+            user.CreatedDate = userDto.CreatedDate;
+            user.UpdatedDate = userDto.UpdatedDate;
+            user.DeletedDate = userDto.DeletedDate;
+            return user;
         }
     }
 }

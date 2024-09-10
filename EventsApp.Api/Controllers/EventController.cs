@@ -1,5 +1,5 @@
 ﻿using EventsApp.Core.Services;
-using EventsApp.Database.Entities;
+using EventsApp.Database.Dtos.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventsApp.Api.Controllers
@@ -19,40 +19,40 @@ namespace EventsApp.Api.Controllers
         [Route("get-events")]
         public IActionResult GetEvents()
         {
-            List<Event> events = eventService.GetEvents();
-            return Ok(events);
+            List<EventDto> eventDtos = eventService.GetEvents();
+            return Ok(eventDtos);
         }
 
         [HttpGet]
         [Route("get-event/{eventId}")]
-        public IActionResult GetEventById(int userId)
+        public IActionResult GetEventById(int eventId)
         {
-            Event _event = eventService.GetEventById(userId);
-            return Ok(_event);
+            EventDto eventDto = eventService.GetEventById(eventId);
+            return Ok(eventDto);
         }
 
         [HttpPost]
         [Route("save-event")]
-        public IActionResult SaveEvent(Event newEvent)
+        public IActionResult SaveEvent(EventDto newEventDto)
         {
-            Event savedEvent = eventService.SaveEvent(newEvent);
-            return Ok(savedEvent);
+            EventDto savedEventDto = eventService.SaveEvent(newEventDto);
+            return Ok(savedEventDto);
         }
 
         [HttpPut]
         [Route("update-event/{eventId}")]
-        public IActionResult UpdateEventById(Event finalEvent, int eventId)
+        public IActionResult UpdateEventById(EventDto finalEventDto, int eventId)
         {
-            Event updatedEvent = eventService.UpdateEventById(finalEvent, eventId);
-            return Ok(updatedEvent);
+            EventDto updatedEventDto = eventService.UpdateEventById(finalEventDto, eventId);
+            return Ok(updatedEventDto);
         }
 
         [HttpDelete]
         [Route("delete-event/{eventId}")]
         public IActionResult DeleteEventById(int eventId)
         {
-            Event deletedEvent = eventService.DeleteEventById(eventId);
-            return Ok(deletedEvent);
+            EventDto deletedEventDto = eventService.DeleteEventById(eventId);
+            return Ok(deletedEventDto);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using EventsApp.Database.Context;
 using EventsApp.Database.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace EventsApp.Database.Repositories
 {
@@ -15,6 +16,8 @@ namespace EventsApp.Database.Repositories
         public List<Event> GetEvents()
         {
             List<Event> events = context.Events
+            .Include(e => e.Owner)
+            .Include(e => e.Participants)
             .Where(e => e.DeletedDate == null)
             .OrderBy(e => e.CreatedDate)
             .ToList();
@@ -24,6 +27,8 @@ namespace EventsApp.Database.Repositories
         public Event GetEventById(int eventId)
         {
             Event _event = context.Events
+            .Include(e => e.Owner)
+            .Include(e => e.Participants)
             .Where(e => e.DeletedDate == null)
             .Where(e => e.EventId == eventId)
             .FirstOrDefault();
@@ -52,6 +57,8 @@ namespace EventsApp.Database.Repositories
             eventToUpdate.EndDate = finalEvent.EndDate;
             eventToUpdate.Price = finalEvent.Price;
             eventToUpdate.EventType = finalEvent.EventType;
+            eventToUpdate.Owner = finalEvent.Owner;
+            eventToUpdate.Participants = finalEvent.Participants;
             eventToUpdate.UpdatedDate = DateTime.Now;
             context.SaveChanges();
             return eventToUpdate;

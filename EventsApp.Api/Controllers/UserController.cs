@@ -1,5 +1,5 @@
 ﻿using EventsApp.Core.Services;
-using EventsApp.Database.Entities;
+using EventsApp.Database.Dtos.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventsApp.Api.Controllers
@@ -19,40 +19,40 @@ namespace EventsApp.Api.Controllers
         [Route("get-users")]
         public IActionResult GetUsers()
         {
-            List<User> users = userService.GetUsers();
-            return Ok(users);
+            List<UserDto> userDtos = userService.GetUsers();
+            return Ok(userDtos);
         }
 
         [HttpGet]
         [Route("get-user/{userId}")]
         public IActionResult GetUserById(int userId)
         {
-            User user = userService.GetUserById(userId);
-            return Ok(user);
+            UserDto userDto = userService.GetUserById(userId);
+            return Ok(userDto);
         }
 
         [HttpPost]
         [Route("save-user")]
-        public IActionResult SaveUser(User newUser)
+        public IActionResult SaveUser(UserDto newUserDto)
         {
-            User savedUser = userService.SaveUser(newUser);
-            return Ok(savedUser);
+            UserDto savedUserDto = userService.SaveUser(newUserDto);
+            return Ok(savedUserDto);
         }
 
         [HttpPut]
         [Route("update-user/{userId}")]
-        public IActionResult UpdateUserById(User finalUser, int userId)
+        public IActionResult UpdateUserById(UserDto finalUserDto, int userId)
         {
-            User updatedUser = userService.UpdateUserById(finalUser, userId);
-            return Ok(updatedUser);
+            UserDto updatedUserDto = userService.UpdateUserById(finalUserDto, userId);
+            return Ok(updatedUserDto);
         }
 
         [HttpDelete]
         [Route("delete-user/{userId}")]
         public IActionResult DeleteUserById(int userId)
         {
-            User deletedUser = userService.DeleteUserById(userId);
-            return Ok(deletedUser);
+            UserDto deletedUserDto = userService.DeleteUserById(userId);
+            return Ok(deletedUserDto);
         }
     }
 }
