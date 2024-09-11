@@ -38,7 +38,8 @@ namespace EventsApp.Api.Controllers
         [Route("save-event")]
         public IActionResult SaveEvent(EventDto newEventDto)
         {
-            EventDto savedEventDto = eventService.SaveEvent(newEventDto);
+            int loggedInUserId = GetLoggedInUserId();
+            EventDto savedEventDto = eventService.SaveEvent(newEventDto, loggedInUserId);
             return Ok(savedEventDto);
         }
 
@@ -58,6 +59,24 @@ namespace EventsApp.Api.Controllers
         {
             EventDto deletedEventDto = eventService.DeleteEventById(eventId);
             return Ok(deletedEventDto);
+        }
+
+        [HttpPut]
+        [Route("add-participant")]
+        public IActionResult AddParticipantToEvent(int eventId, int userId)
+        {
+            int loggedInUserId = GetLoggedInUserId();
+            EventDto updatedEventDto = eventService.AddParticipantToEvent(eventId, userId, loggedInUserId);
+            return Ok(updatedEventDto);
+        }
+
+        [HttpPut]
+        [Route("remove-participant")]
+        public IActionResult RemoveParticipantFromEvent(int eventId, int userId)
+        {
+            int loggedInUserId = GetLoggedInUserId();
+            EventDto updatedEventDto = eventService.RemoveParticipantFromEvent(eventId, userId, loggedInUserId);
+            return Ok(updatedEventDto);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace EventsApp.Database.Dtos.Common
         public DateTime EndDate { get; set; }
         public double Price { get; set; }
         public EventType EventType { get; set; }
-        public int OwnerId { get; set; }
+        public int OwnerId { get; set; } = 1;
         public List<int> ParticipantsIds { get; set; } = new List<int>();
     }
 }

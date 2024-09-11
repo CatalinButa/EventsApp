@@ -1,4 +1,5 @@
-﻿using EventsApp.Database.Dtos.Common;
+﻿using EventsApp.Database.Context;
+using EventsApp.Database.Dtos.Common;
 using EventsApp.Database.Entities;
 using EventsApp.Database.Repositories;
 
@@ -8,11 +9,13 @@ namespace EventsApp.Core.Services
     {
         public EventRepository eventRepository { get; set; }
         public UserRepository userRepository { get; set; }
+        public AppDbContext context { get; set; }
 
-        public EventService(EventRepository eventRepository, UserRepository userRepository)
+        public EventService(EventRepository eventRepository, UserRepository userRepository, AppDbContext context)
         {
             this.eventRepository = eventRepository;
             this.userRepository = userRepository;
+            this.context = context;
         }
 
         public List<EventDto> GetEvents()
@@ -34,11 +37,12 @@ namespace EventsApp.Core.Services
             return eventDto;
         }
 
-        public EventDto SaveEvent(EventDto newEventDto)
+        public EventDto SaveEvent(EventDto newEventDto, int loggedInUserId)
         {
             Event newEvent = ConvertToEvent(newEventDto);
             Event savedEvent = eventRepository.SaveEvent(newEvent);
             EventDto savedEventDto = ConvertToEventDto(savedEvent);
+            savedEventDto.OwnerId = loggedInUserId;
             return savedEventDto;
         }
 
@@ -60,6 +64,48 @@ namespace EventsApp.Core.Services
             Event deletedEvent = eventRepository.DeleteEventById(eventId);
             EventDto deletedEventDto = ConvertToEventDto(deletedEvent);
             return deletedEventDto;
+        }
+
+        public EventDto AddParticipantToEvent(int eventId, int userId, int loggedInUserId)
+        {
+            Event _event = eventRepository.GetEventById(eventId);
+            if (_event.Owner.UserId != loggedInUserId)
+            {
+                throw new Exception("You can't update the list of participants of another user's event");
+            }
+            if (_event.Owner.UserId == userId)
+            {
+                throw new Exception("You (the owner) can't add yourself as a participant");
+            }
+            UserEvent participant = new UserEvent();
+            participant.UserId = userId;
+            participant.EventId = eventId;
+            _event.Participants.Add(participant);
+            context.SaveChanges();
+            EventDto eventDto = ConvertToEventDto(_event);
+            return eventDto;
+        }
+
+        public EventDto RemoveParticipantFromEvent(int eventId, int userId, int loggedInUserId)
+        {
+            Event _event = eventRepository.GetEventById(eventId);
+            if (_event.Owner.UserId != loggedInUserId)
+            {
+                throw new Exception("You can't update the list of participants of another user's event");
+            }
+            if (_event.Owner.UserId == userId)
+            {
+                throw new Exception("You (the owner) can't remove yourself from the list of participants");
+            }
+            UserEvent participant = _event.Participants.FirstOrDefault(p => p.UserId == userId);
+            if (participant == null)
+            {
+                throw new Exception("This user doesn't participate in the event");
+            }
+            _event.Participants.Remove(participant);
+            context.SaveChanges();
+            EventDto eventDto = ConvertToEventDto(_event);
+            return eventDto;
         }
 
         private EventDto ConvertToEventDto(Event _event)
