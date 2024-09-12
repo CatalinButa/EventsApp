@@ -125,13 +125,13 @@ namespace EventsApp.Core.Services
 
         private string HashPassword(string password, byte[] salt)
         {
-            string hassedPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+            string hashedPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
             password: password,
             salt: salt,
             prf: KeyDerivationPrf.HMACSHA256,
             iterationCount: 1000,
             numBytesRequested: 256 / 8));
-            return hassedPassword;
+            return hashedPassword;
         }
 
         private string GetToken(User user, string role)

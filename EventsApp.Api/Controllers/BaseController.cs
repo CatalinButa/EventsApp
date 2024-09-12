@@ -17,7 +17,8 @@ namespace SoundSphere.Api.Controllers
             {
                 throw new Exception("Invalid user id claim");
             }
-            return int.Parse(rawUserId);
+            int userId = int.Parse(rawUserId);
+            return userId;
         }
     }
 }
